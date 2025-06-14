@@ -26,6 +26,7 @@ export const FindRationShops = () => {
   const [shops, setShops] = useState<RationShop[]>([]);
   const [loading, setLoading] = useState(false);
   const [usingMockData, setUsingMockData] = useState(false);
+  const [searchCoordinates, setSearchCoordinates] = useState<{lat: number, lng: number} | null>(null);
   const { toast } = useToast();
 
   const getCurrentLocation = () => {
@@ -59,6 +60,7 @@ export const FindRationShops = () => {
   const searchNearbyShops = async (lat: number, lng: number) => {
     try {
       console.log(`Searching for shops near coordinates: ${lat}, ${lng}`);
+      setSearchCoordinates({ lat, lng });
       
       const { data, error } = await supabase.functions.invoke('maps-service', {
         body: { lat, lng }
@@ -188,6 +190,18 @@ export const FindRationShops = () => {
     }
   };
 
+  const getMapImageUrl = () => {
+    if (!searchCoordinates) return '';
+    
+    // Create markers for all shops
+    const markers = shops.map(shop => 
+      `markers=color:red%7C${shop.location.lat},${shop.location.lng}`
+    ).join('&');
+    
+    // Use a placeholder key - the actual implementation would need a real Google Maps API key
+    return `https://maps.googleapis.com/maps/api/staticmap?center=${searchCoordinates.lat},${searchCoordinates.lng}&zoom=12&size=400x400&${markers}&key=YOUR_KEY`;
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -229,6 +243,30 @@ export const FindRationShops = () => {
           </div>
         </CardContent>
       </Card>
+
+      {searchCoordinates && shops.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Map View</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-center">
+              <img 
+                src={getMapImageUrl()}
+                alt="Map showing ration shop locations"
+                className="rounded-lg border shadow-sm"
+                onError={(e) => {
+                  // Hide the image if it fails to load (due to missing API key)
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            </div>
+            <p className="text-sm text-gray-500 text-center mt-2">
+              Map showing search area and nearby ration shops
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {shops.length > 0 && (
         <div className="space-y-4">
