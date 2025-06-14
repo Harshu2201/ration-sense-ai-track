@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, Database, Users, Download, TrendingUp, BarChart3, Bell } from "lucide-react";
+import { Upload, Database, Users, Download, TrendingUp, BarChart3, Bell, MessageCircle } from "lucide-react";
 import { DataImport } from "./data-management/DataImport";
 import { CommunityData } from "./data-management/CommunityData";
 import { DataExport } from "./data-management/DataExport";
@@ -11,6 +11,7 @@ import { MacroTrends } from "./data-management/MacroTrends";
 import { StockForecasting } from "./data-management/StockForecasting";
 import { AlertManagement } from "./data-management/AlertManagement";
 import { StockAlertCreator } from "./data-management/StockAlertCreator";
+import { RationChatbot } from "../RationChatbot";
 
 export const DataManagement = () => {
   return (
@@ -20,12 +21,12 @@ export const DataManagement = () => {
           PDS Data Management
         </h1>
         <p className="text-lg text-gray-600">
-          Import official government datasets, manage community-contributed data, analyze macro-level trends, predict stock arrivals, and manage user alerts
+          Import official government datasets, manage community-contributed data, analyze macro-level trends, predict stock arrivals, manage user alerts, and chat with AI assistant
         </p>
       </div>
 
       <Tabs defaultValue="import" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="import" className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
             Data Import
@@ -45,6 +46,10 @@ export const DataManagement = () => {
           <TabsTrigger value="alerts" className="flex items-center gap-2">
             <Bell className="h-4 w-4" />
             Alert System
+          </TabsTrigger>
+          <TabsTrigger value="chatbot" className="flex items-center gap-2">
+            <MessageCircle className="h-4 w-4" />
+            AI Assistant
           </TabsTrigger>
           <TabsTrigger value="export" className="flex items-center gap-2">
             <Download className="h-4 w-4" />
@@ -73,6 +78,10 @@ export const DataManagement = () => {
             <StockAlertCreator />
             <AlertManagement />
           </div>
+        </TabsContent>
+
+        <TabsContent value="chatbot">
+          <RationChatbot />
         </TabsContent>
 
         <TabsContent value="export">
