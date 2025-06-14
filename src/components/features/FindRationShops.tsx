@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Navigation, Phone, Star } from "lucide-react";
+import { MapPin, Navigation, Phone, Star, AlertCircle, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -25,6 +25,7 @@ export const FindRationShops = () => {
   const [location, setLocation] = useState('');
   const [shops, setShops] = useState<RationShop[]>([]);
   const [loading, setLoading] = useState(false);
+  const [usingMockData, setUsingMockData] = useState(false);
   const { toast } = useToast();
 
   const getCurrentLocation = () => {
@@ -57,24 +58,51 @@ export const FindRationShops = () => {
 
   const searchNearbyShops = async (lat: number, lng: number) => {
     try {
+      console.log(`Searching for shops near coordinates: ${lat}, ${lng}`);
+      
       const { data, error } = await supabase.functions.invoke('maps-service', {
         body: { lat, lng }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
 
-      const ratinoShops: RationShop[] = data.shops.map((shop: any) => ({
-        id: shop.id,
-        name: shop.name,
-        address: shop.address,
-        phone: `+91 ${Math.floor(Math.random() * 9000000000) + 1000000000}`, // Mock phone numbers
-        distance: shop.distance,
-        status: shop.isOpen ? 'open' : (shop.isOpen === false ? 'closed' : 'unknown'),
-        rating: shop.rating,
-        location: shop.location
-      }));
+      console.log('Maps service response:', data);
 
-      setShops(ratinoShops);
+      if (data && data.shops) {
+        const rationShops: RationShop[] = data.shops.map((shop: any) => ({
+          id: shop.id,
+          name: shop.name,
+          address: shop.address,
+          phone: shop.phone || `+91 ${Math.floor(Math.random() * 9000000000) + 1000000000}`,
+          distance: shop.distance,
+          status: shop.isOpen === true ? 'open' : (shop.isOpen === false ? 'closed' : 'unknown'),
+          rating: shop.rating || Math.round((Math.random() * 2 + 3) * 10) / 10, // 3.0-5.0 rating
+          location: shop.location
+        }));
+
+        setShops(rationShops);
+        
+        // Check if we're using mock data (shops with mock IDs)
+        const isMockData = rationShops.some(shop => shop.id.startsWith('shop_'));
+        setUsingMockData(isMockData);
+        
+        if (isMockData) {
+          toast({
+            title: "Demo Data Loaded",
+            description: "Showing sample ration shops. Configure Google Maps API for real data.",
+          });
+        } else {
+          toast({
+            title: "Shops Found",
+            description: `Found ${rationShops.length} nearby ration shops`,
+          });
+        }
+      } else {
+        throw new Error('No shops data received');
+      }
     } catch (error) {
       console.error('Error fetching nearby shops:', error);
       toast({
@@ -99,15 +127,23 @@ export const FindRationShops = () => {
 
     setLoading(true);
     try {
+      console.log(`Geocoding location: ${location}`);
+      
       // First geocode the location
       const { data, error } = await supabase.functions.invoke('maps-service', {
         body: { query: location }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Geocoding error:', error);
+        throw error;
+      }
 
-      if (data.results && data.results.length > 0) {
+      console.log('Geocoding response:', data);
+
+      if (data && data.results && data.results.length > 0) {
         const { lat, lng } = data.results[0].location;
+        console.log(`Geocoded to coordinates: ${lat}, ${lng}`);
         await searchNearbyShops(lat, lng);
       } else {
         toast({
@@ -144,6 +180,14 @@ export const FindRationShops = () => {
     }
   };
 
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'open': return <div className="h-2 w-2 bg-green-500 rounded-full" />;
+      case 'closed': return <div className="h-2 w-2 bg-red-500 rounded-full" />;
+      default: return <Clock className="h-3 w-3 text-gray-500" />;
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -154,6 +198,17 @@ export const FindRationShops = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
+          {usingMockData && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-blue-600" />
+                <span className="text-sm text-blue-700">
+                  Currently showing demo data. Configure Google Maps API for real-time shop locations.
+                </span>
+              </div>
+            </div>
+          )}
+          
           <div className="flex flex-col sm:flex-row gap-2">
             <Input
               placeholder="Enter your location, PIN code, or address"
@@ -167,7 +222,8 @@ export const FindRationShops = () => {
                 {loading ? 'Searching...' : 'Search'}
               </Button>
               <Button variant="outline" onClick={getCurrentLocation} disabled={loading}>
-                Use Current Location
+                <Navigation className="h-4 w-4 mr-1" />
+                Current Location
               </Button>
             </div>
           </div>
@@ -176,27 +232,33 @@ export const FindRationShops = () => {
 
       {shops.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Nearby Ration Shops ({shops.length} found)</h3>
+          <h3 className="text-lg font-semibold">
+            Nearby Ration Shops ({shops.length} found)
+            {usingMockData && <span className="text-sm text-gray-500 ml-2">(Demo Data)</span>}
+          </h3>
           {shops.map((shop) => (
-            <Card key={shop.id}>
+            <Card key={shop.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-4">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <h4 className="font-semibold">{shop.name}</h4>
-                    <p className="text-sm text-gray-600 mt-1">{shop.address}</p>
-                    <div className="flex items-center gap-4 mt-2">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-semibold">{shop.name}</h4>
+                      {getStatusIcon(shop.status)}
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">{shop.address}</p>
+                    <div className="flex items-center gap-4 text-sm">
                       {shop.phone && (
-                        <span className="flex items-center gap-1 text-sm">
+                        <span className="flex items-center gap-1">
                           <Phone className="h-3 w-3" />
                           {shop.phone}
                         </span>
                       )}
-                      <span className="flex items-center gap-1 text-sm">
+                      <span className="flex items-center gap-1">
                         <Navigation className="h-3 w-3" />
                         {shop.distance}
                       </span>
                       {shop.rating > 0 && (
-                        <span className="flex items-center gap-1 text-sm">
+                        <span className="flex items-center gap-1">
                           <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                           {shop.rating.toFixed(1)}
                         </span>
@@ -213,6 +275,18 @@ export const FindRationShops = () => {
             </Card>
           ))}
         </div>
+      )}
+
+      {shops.length === 0 && !loading && (
+        <Card>
+          <CardContent className="p-6 text-center">
+            <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No Shops Found</h3>
+            <p className="text-gray-600">
+              Try searching for a different location or use your current location.
+            </p>
+          </CardContent>
+        </Card>
       )}
     </div>
   );
