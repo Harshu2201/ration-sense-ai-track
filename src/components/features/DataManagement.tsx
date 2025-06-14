@@ -1,8 +1,9 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, Database, Users, Download, TrendingUp, BarChart3, Bell, MessageCircle } from "lucide-react";
+import { Upload, Database, Users, Download, TrendingUp, BarChart3, Bell, MessageCircle, Phone } from "lucide-react";
 import { DataImport } from "./data-management/DataImport";
 import { CommunityData } from "./data-management/CommunityData";
 import { DataExport } from "./data-management/DataExport";
@@ -10,6 +11,7 @@ import { MacroTrends } from "./data-management/MacroTrends";
 import { StockForecasting } from "./data-management/StockForecasting";
 import { AlertManagement } from "./data-management/AlertManagement";
 import { StockAlertCreator } from "./data-management/StockAlertCreator";
+import { WhatsAppIntegration } from "./data-management/WhatsAppIntegration";
 import { RationChatbot } from "./RationChatbot";
 
 export const DataManagement = () => {
@@ -20,12 +22,12 @@ export const DataManagement = () => {
           PDS Data Management
         </h1>
         <p className="text-lg text-gray-600">
-          Import official government datasets, manage community-contributed data, analyze macro-level trends, predict stock arrivals, manage user alerts, and chat with AI assistant
+          Import official government datasets, manage community-contributed data, analyze macro-level trends, predict stock arrivals, manage user alerts, and enable crowdsourced data collection
         </p>
       </div>
 
       <Tabs defaultValue="import" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="import" className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
             Data Import
@@ -33,6 +35,10 @@ export const DataManagement = () => {
           <TabsTrigger value="community" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Community Data
+          </TabsTrigger>
+          <TabsTrigger value="whatsapp" className="flex items-center gap-2">
+            <Phone className="h-4 w-4" />
+            WhatsApp
           </TabsTrigger>
           <TabsTrigger value="trends" className="flex items-center gap-2">
             <TrendingUp className="h-4 w-4" />
@@ -62,6 +68,10 @@ export const DataManagement = () => {
 
         <TabsContent value="community">
           <CommunityData />
+        </TabsContent>
+
+        <TabsContent value="whatsapp">
+          <WhatsAppIntegration />
         </TabsContent>
 
         <TabsContent value="trends">
