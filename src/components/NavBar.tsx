@@ -12,18 +12,18 @@ export const NavBar = () => {
   if (!user) return null;
 
   return (
-    <nav className="bg-white shadow-md border-b-2 border-orange-500 px-4 py-3">
+    <nav className="bg-white shadow-md border-b-2 border-blue-500 px-4 py-3">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-3">
-          <Building2 className="h-8 w-8 text-orange-600" />
+          <Building2 className="h-8 w-8 text-blue-600" />
           <div>
             <h1 
-              className="text-xl font-bold text-orange-600 cursor-pointer leading-tight" 
+              className="text-xl font-bold text-blue-600 cursor-pointer leading-tight" 
               onClick={() => navigate('/')}
             >
               RationTrack
             </h1>
-            <p className="text-xs text-gray-500">Government of India</p>
+            <p className="text-xs text-gray-500">Resource Distribution</p>
           </div>
         </div>
         
@@ -31,7 +31,7 @@ export const NavBar = () => {
           <Button 
             variant="ghost" 
             onClick={() => navigate('/features')}
-            className="text-gray-700 hover:text-orange-600 hover:bg-orange-50"
+            className="text-gray-700 hover:text-blue-600 hover:bg-blue-50"
           >
             Services
           </Button>
@@ -57,9 +57,9 @@ export const NavBar = () => {
                 <p className="text-sm font-medium text-gray-700">Signed in as</p>
                 <p className="text-xs text-gray-500 truncate">{user.email}</p>
               </div>
-              <DropdownMenuItem onClick={() => window.open('https://dfpd.gov.in/', '_blank')} className="cursor-pointer">
+              <DropdownMenuItem onClick={() => window.open('https://example.com/', '_blank')} className="cursor-pointer">
                 <ExternalLink className="h-4 w-4 mr-2" />
-                Ministry Website
+                Main Website
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer text-red-600">
                 Sign Out

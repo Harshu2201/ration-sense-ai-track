@@ -52,7 +52,7 @@ export const ShopCard = ({ shop }: ShopCardProps) => {
         <div className="flex justify-between items-start">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <Building2 className="h-4 w-4 text-orange-600" />
+              <Building2 className="h-4 w-4 text-blue-600" />
               <h4 className="font-semibold text-gray-800">{shop.name}</h4>
               {getStatusIcon(shop.status)}
             </div>

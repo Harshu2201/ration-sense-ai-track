@@ -29,7 +29,7 @@ export const ShopsList = ({ shops, usingMockData }: ShopsListProps) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800">
-          Authorized Ration Shops ({shops.length} found)
+          Distribution Centers ({shops.length} found)
         </h3>
         {usingMockData && (
           <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">

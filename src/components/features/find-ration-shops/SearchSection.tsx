@@ -23,14 +23,14 @@ export const SearchSection = ({
   onGetCurrentLocation 
 }: SearchSectionProps) => {
   return (
-    <Card className="border-l-4 border-l-orange-500">
-      <CardHeader className="bg-gradient-to-r from-orange-50 to-green-50">
+    <Card className="border-l-4 border-l-blue-500">
+      <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50">
         <CardTitle className="flex items-center gap-2 text-gray-800">
-          <Building2 className="h-5 w-5 text-orange-600" />
-          Government Ration Shop Locator
+          <Building2 className="h-5 w-5 text-blue-600" />
+          Distribution Center Locator
         </CardTitle>
         <p className="text-sm text-gray-600">
-          Find authorized Fair Price Shops and PDS centers in your area
+          Find authorized distribution centers and resource hubs in your area
         </p>
       </CardHeader>
       <CardContent className="pt-6">
@@ -39,7 +39,7 @@ export const SearchSection = ({
             <div className="flex items-center gap-2">
               <AlertCircle className="h-4 w-4 text-blue-600" />
               <span className="text-sm text-blue-700">
-                Demo Mode: Showing sample government ration shops for demonstration purposes.
+                Demo Mode: Showing sample distribution centers for demonstration purposes.
               </span>
             </div>
           </div>
@@ -47,7 +47,7 @@ export const SearchSection = ({
         
         <div className="flex flex-col sm:flex-row gap-3">
           <Input
-            placeholder="Enter PIN code, area name, or full address"
+            placeholder="Enter ZIP code, area name, or full address"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             className="flex-1"
@@ -57,15 +57,15 @@ export const SearchSection = ({
             <Button 
               onClick={onSearch} 
               disabled={loading}
-              className="bg-orange-600 hover:bg-orange-700"
+              className="bg-blue-600 hover:bg-blue-700"
             >
-              {loading ? 'Searching...' : 'Find Shops'}
+              {loading ? 'Searching...' : 'Find Centers'}
             </Button>
             <Button 
               variant="outline" 
               onClick={onGetCurrentLocation} 
               disabled={loading}
-              className="border-orange-600 text-orange-600 hover:bg-orange-50"
+              className="border-blue-600 text-blue-600 hover:bg-blue-50"
             >
               <Navigation className="h-4 w-4 mr-1" />
               Use Location
