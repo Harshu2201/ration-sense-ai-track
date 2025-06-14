@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +10,7 @@ import { MacroTrends } from "./data-management/MacroTrends";
 import { StockForecasting } from "./data-management/StockForecasting";
 import { AlertManagement } from "./data-management/AlertManagement";
 import { StockAlertCreator } from "./data-management/StockAlertCreator";
-import { RationChatbot } from "../RationChatbot";
+import { RationChatbot } from "./RationChatbot";
 
 export const DataManagement = () => {
   return (
