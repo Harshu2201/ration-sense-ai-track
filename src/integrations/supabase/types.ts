@@ -48,6 +48,110 @@ export type Database = {
         }
         Relationships: []
       }
+      sent_notifications: {
+        Row: {
+          alert_id: string
+          id: string
+          notification_type: string
+          sent_at: string
+          user_id: string
+        }
+        Insert: {
+          alert_id: string
+          id?: string
+          notification_type: string
+          sent_at?: string
+          user_id: string
+        }
+        Update: {
+          alert_id?: string
+          id?: string
+          notification_type?: string
+          sent_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sent_notifications_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "stock_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_alerts: {
+        Row: {
+          arrival_date: string
+          commodity_name: string
+          created_at: string
+          id: string
+          message: string | null
+          quantity_kg: number | null
+          sent_at: string | null
+          shop_id: string
+          shop_name: string
+        }
+        Insert: {
+          arrival_date: string
+          commodity_name: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          quantity_kg?: number | null
+          sent_at?: string | null
+          shop_id: string
+          shop_name: string
+        }
+        Update: {
+          arrival_date?: string
+          commodity_name?: string
+          created_at?: string
+          id?: string
+          message?: string | null
+          quantity_kg?: number | null
+          sent_at?: string | null
+          shop_id?: string
+          shop_name?: string
+        }
+        Relationships: []
+      }
+      user_alert_preferences: {
+        Row: {
+          created_at: string
+          email_notifications: boolean | null
+          id: string
+          phone_number: string | null
+          preferred_commodities: string[] | null
+          preferred_shops: string[] | null
+          sms_notifications: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_notifications?: boolean | null
+          id?: string
+          phone_number?: string | null
+          preferred_commodities?: string[] | null
+          preferred_shops?: string[] | null
+          sms_notifications?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_notifications?: boolean | null
+          id?: string
+          phone_number?: string | null
+          preferred_commodities?: string[] | null
+          preferred_shops?: string[] | null
+          sms_notifications?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

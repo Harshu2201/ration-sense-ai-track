@@ -3,12 +3,14 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, Database, Users, Download, TrendingUp, BarChart3 } from "lucide-react";
+import { Upload, Database, Users, Download, TrendingUp, BarChart3, Bell } from "lucide-react";
 import { DataImport } from "./data-management/DataImport";
 import { CommunityData } from "./data-management/CommunityData";
 import { DataExport } from "./data-management/DataExport";
 import { MacroTrends } from "./data-management/MacroTrends";
 import { StockForecasting } from "./data-management/StockForecasting";
+import { AlertManagement } from "./data-management/AlertManagement";
+import { StockAlertCreator } from "./data-management/StockAlertCreator";
 
 export const DataManagement = () => {
   return (
@@ -18,12 +20,12 @@ export const DataManagement = () => {
           PDS Data Management
         </h1>
         <p className="text-lg text-gray-600">
-          Import official government datasets, manage community-contributed data, analyze macro-level trends, and predict stock arrivals
+          Import official government datasets, manage community-contributed data, analyze macro-level trends, predict stock arrivals, and manage user alerts
         </p>
       </div>
 
       <Tabs defaultValue="import" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="import" className="flex items-center gap-2">
             <Upload className="h-4 w-4" />
             Data Import
@@ -39,6 +41,10 @@ export const DataManagement = () => {
           <TabsTrigger value="forecasting" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
             Stock Forecasting
+          </TabsTrigger>
+          <TabsTrigger value="alerts" className="flex items-center gap-2">
+            <Bell className="h-4 w-4" />
+            Alert System
           </TabsTrigger>
           <TabsTrigger value="export" className="flex items-center gap-2">
             <Download className="h-4 w-4" />
@@ -60,6 +66,13 @@ export const DataManagement = () => {
 
         <TabsContent value="forecasting">
           <StockForecasting />
+        </TabsContent>
+
+        <TabsContent value="alerts">
+          <div className="space-y-6">
+            <StockAlertCreator />
+            <AlertManagement />
+          </div>
         </TabsContent>
 
         <TabsContent value="export">
